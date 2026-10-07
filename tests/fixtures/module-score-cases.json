@@ -1,0 +1,13 @@
+[
+  { "score": 0, "valid": true },
+  { "score": 1, "valid": true },
+  { "score": 0.1, "valid": true },
+  { "score": 0.123, "valid": true },
+  { "score": 13.999, "valid": true },
+  { "score": -1, "valid": false },
+  { "score": 0.1234, "valid": false },
+  { "score": 1.0001, "valid": false },
+  { "score": "1", "valid": false },
+  { "score": null, "valid": false },
+  { "score": true, "valid": false }
+]
