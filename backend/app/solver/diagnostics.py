@@ -18,6 +18,9 @@ MAX_SOLUTION_EVENTS = 1_000
 
 
 def default_diagnostics_root() -> Path | None:
+    configured_root = os.environ.get("EVE_FRONTIER_FITTER_DIAGNOSTICS_DIR")
+    if configured_root:
+        return Path(configured_root)
     local_app_data = os.environ.get("LOCALAPPDATA")
     if not local_app_data:
         return None

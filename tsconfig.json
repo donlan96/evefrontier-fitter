@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "db", "drizzle", "worker", "examples"]
+  "exclude": ["node_modules", "db", "drizzle", "worker", "examples", "dist", "work", "outputs", ".pnpm-store"]
 }

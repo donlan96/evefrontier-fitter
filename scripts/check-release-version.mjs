@@ -24,7 +24,7 @@ const checks = [
   ["README.md", `当前稳定版本：**v${version}`],
   ["README.md", `（${releaseDate}）`],
   ["src/version.ts", 'import packageMetadata from "../package.json"'],
-  ["backend/app/version.py", 'parents[2] / "package.json"'],
+  ["backend/app/version.py", 'application_resource_root() / "package.json"'],
 ];
 
 const failures = checks.filter(([relativePath, marker]) => !read(relativePath).includes(marker));

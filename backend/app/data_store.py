@@ -19,6 +19,7 @@ from app.models import (
     SolverSolution,
     to_camel,
 )
+from app.starter_content import default_starter_path, starter_document
 
 
 DATA_SCHEMA_VERSION = 1
@@ -203,9 +204,10 @@ def default_data_path() -> Path | None:
 
 
 class FitterDataStore:
-    def __init__(self, path: Path | None = None) -> None:
+    def __init__(self, path: Path | None = None, *, starter_path: Path | None = None) -> None:
         self.path = path if path is not None else default_data_path()
         self.backup_path = self.path.with_suffix(".json.bak") if self.path else None
+        self.starter_path = starter_path if starter_path is not None else default_starter_path() if path is None else None
         self._lock = threading.RLock()
 
     @staticmethod
@@ -249,6 +251,12 @@ class FitterDataStore:
                     primary_error = error
             if primary_error is not None:
                 raise DataCorruptionError("primary and backup fitter data are unavailable") from primary_error
+            if self.starter_path is not None:
+                try:
+                    document = FitterDataDocument.model_validate(starter_document(self.starter_path))
+                except (OSError, ValueError) as error:
+                    raise DataCorruptionError("bundled starter content is unavailable or invalid") from error
+                return LoadedFitterData(document, "empty")
             return LoadedFitterData(empty_fitter_data(), "empty")
 
     @staticmethod

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import fs from "node:fs";
+
+const appVersion = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8")).version;
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -24,7 +27,7 @@ test("server-renders the ship fitting workspace", async () => {
   assert.match(html, /导出 JSON/);
   assert.match(html, /导入 JSON/);
   assert.match(html, /自动配装/);
-  assert.match(html, /v1\.1\.0/);
+  assert.ok(html.includes(`v${appVersion}`));
   assert.match(html, /立即保存/);
   assert.match(html, /id="frontier-extension-error-guard"/);
   assert.match(html, /stopImmediatePropagation/);

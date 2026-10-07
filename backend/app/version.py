@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from app.resources import application_resource_root
 
 
-_PACKAGE_JSON = Path(__file__).resolve().parents[2] / "package.json"
+_PACKAGE_JSON = application_resource_root() / "package.json"
 
 
 def read_app_version() -> str:
