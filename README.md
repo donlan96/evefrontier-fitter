@@ -4,7 +4,7 @@
 
 这是一个用于 EVE Frontier 的飞船配装工具。你可以在网页里画出飞船的可用空间和装备形状，拖拽装备进行手动配装；也可以设置必装装备和数量限制，用 **CP-SAT 算法自动求解优质配装方案**。配装方案支持保存、导入和导出。
 
-当前稳定版本：**v1.2.0（2026-10-07）**。用户可见变化见 [CHANGELOG.md](CHANGELOG.md)，运行维护与后续集成说明见 [docs/PROJECT_HANDOFF.md](docs/PROJECT_HANDOFF.md)，其他资料可从 [文档导航](docs/README.md) 进入。
+当前稳定版本：**v1.2.1（2026-10-08）**。用户可见变化见 [CHANGELOG.md](CHANGELOG.md)，运行维护与后续集成说明见 [docs/PROJECT_HANDOFF.md](docs/PROJECT_HANDOFF.md)，其他资料可从 [文档导航](docs/README.md) 进入。
 
 自动求解在使用者自己的电脑上运行，不需要购买服务器。
 
@@ -12,7 +12,9 @@
 
 ### Windows 安装包（推荐）
 
-在 [GitHub Releases](https://github.com/donlan96/evefrontier-fitter/releases/latest) 下载 `EveFrontierFitter-1.2.0-Setup-x64.exe`，安装后双击桌面的“舰装格局”快捷方式。程序会自动在浏览器打开 `http://localhost:3000`。
+在 [GitHub Releases](https://github.com/donlan96/evefrontier-fitter/releases/latest) 下载 `EveFrontierFitter-1.2.1-Setup-x64.exe`，安装后双击桌面的“舰装格局”快捷方式。程序会自动在浏览器打开 `http://localhost:3000`。
+
+v1.2.0 安装包存在缺少 React 运行依赖的已知问题，请使用 v1.2.1 或更新版本。已安装旧版时直接覆盖安装，个人存档保留。
 
 安装包自带 Node.js、Python 和 CP-SAT，无需另装运行环境，安装后可离线使用。默认内置“掠夺者”（294 格）、“初始飞船”（478 格）两个棋盘和 23 个装备定义；首次使用无需重新绘制，选择棋盘后创建自己的命名配装即可。
 

@@ -4,11 +4,13 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import socket
 import subprocess
 import time
 from urllib.request import Request, urlopen
+from urllib.parse import urljoin
 
 
 def json_request(url: str, payload=None, method="GET"):
@@ -23,13 +25,17 @@ def main():
     parser.add_argument("--work-dir", required=True, type=Path)
     args = parser.parse_args()
     app_dir = args.app_dir.resolve()
+    for parent in app_dir.parents:
+        if (parent / "node_modules").exists():
+            raise RuntimeError(f"Test installation must be outside developer dependency directories: {parent}")
+    expected_version = json.loads((app_dir / "package.json").read_bytes())["version"]
     data_root = args.work_dir.resolve()
     if data_root.exists():
         raise RuntimeError("Use a new empty smoke-test directory")
     data_root.mkdir(parents=True)
     exe = app_dir / "EveFrontierFitter.exe"
     # Strip developer runtimes from PATH and Python lookup variables.
-    environment = {key: value for key, value in os.environ.items() if key not in ("PYTHONPATH", "PYTHONHOME")}
+    environment = {key: value for key, value in os.environ.items() if key.upper() not in ("PYTHONPATH", "PYTHONHOME", "NODE_PATH", "NODE_OPTIONS")}
     environment["PATH"] = str(Path(os.environ["SystemRoot"]) / "System32")
     flags = subprocess.CREATE_NO_WINDOW
     ports = (13000, 18765)
@@ -43,10 +49,15 @@ def main():
     try:
         subprocess.run(launch, env=environment, creationflags=flags, check=True, timeout=90)
         health = json_request(f"{api}/health")
-        assert health["version"] == "1.2.0"
+        assert health["version"] == expected_version
         with urlopen(f"http://localhost:{ports[0]}/", timeout=10) as response:
             html = response.read().decode()
-        assert 'class="app"' in html and "v1.2.0" in html
+        assert 'class="app"' in html and f"v{expected_version}" in html
+        script_urls = re.findall(r'<script[^>]+src="([^"]+)"', html)
+        assert script_urls, "Frontend HTML must load browser scripts"
+        for script_url in script_urls:
+            with urlopen(urljoin(f"http://localhost:{ports[0]}/", script_url), timeout=10) as response:
+                assert response.status == 200 and "javascript" in response.headers.get("Content-Type", "").lower()
         loaded = json_request(f"{api}/data")
         assert loaded["source"] == "empty"
         seed = loaded["document"]

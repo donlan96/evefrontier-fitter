@@ -34,6 +34,10 @@ Setup；前端依赖由 pnpm-lock.yaml 固定，已验证的 Python 运行库和
 Node 二进制在打包前对照 nodejs.org 官方 SHA-256 校验；运行库许可证随安装目录提供。
 `build-manifest.json` 保留本次运行库版本、安装包大小及校验值。
 
+v1.2.0 的 standalone 输出遗漏 vinext 服务自身导入的 React peer 依赖。v1.2.1 起，
+`prepare-web-runtime.mjs` 补齐锁定版本的 React/React DOM 及其生产依赖（scheduler），
+检查运行依赖解析路径均位于包内，并预加载网页服务；检查失败则不生成安装包。
+
 默认日常地址是 `http://localhost:3000`，求解器只监听 `127.0.0.1:8765`。
 启动器核对可执行文件路径和进程创建时间，停止时不结束其他程序或 PID 已复用的进程。
 遇到其他程序或旧源码版占用端口时提示用户先关闭，不自动混用服务。
@@ -41,6 +45,10 @@ Node 二进制在打包前对照 nodejs.org 官方 SHA-256 校验；运行库许
 测试可通过 `--no-browser --data-root <独立测试目录> --frontend-port 13000 --solver-port 18765`
 启动冻结包，用于检查文件加载、后端、持久化和原生 CP-SAT。浏览器 UI 的默认 API 地址
 仍固定为 8765，备用测试端口不作为公开产品入口。测试不得使用真实用户目录。
+
+必须把安装目录放在开发 checkout 之外的独立临时目录，祖先目录不得含 node_modules。
+`smoke-windows.py` 会拒绝不隔离的安装路径，并清除 NODE_PATH/NODE_OPTIONS/Python 查找
+变量。测试实际安装后的网页脚本、求解和存档保留；仅缩减 PATH 不能排除祖先依赖。
 
 ## 发布
 

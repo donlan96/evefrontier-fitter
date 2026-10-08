@@ -31,6 +31,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Backend/launcher freezing failed.' }
     $payload = Join-Path $buildRoot 'frozen\EveFrontierFitter'
     Copy-Item -LiteralPath $standalone -Destination (Join-Path $payload 'web') -Recurse
+    & $NodeExe (Join-Path $PSScriptRoot 'prepare-web-runtime.mjs') --web-dir (Join-Path $payload 'web')
+    if ($LASTEXITCODE -ne 0) { throw 'Standalone runtime dependencies are incomplete.' }
     Copy-Item -LiteralPath (Join-Path $projectRoot 'package.json'), (Join-Path $projectRoot 'LICENSE'), (Join-Path $projectRoot 'README.md') -Destination $payload
     New-Item -ItemType Directory -Path (Join-Path $payload 'runtime'), (Join-Path $payload 'licenses') -Force | Out-Null
 

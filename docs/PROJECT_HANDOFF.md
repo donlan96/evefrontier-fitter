@@ -1,8 +1,8 @@
 # 舰装格局项目交接
 
-当前版本：v1.2.0
+当前版本：v1.2.1
 
-发布日期：2026-10-07
+发布日期：2026-10-08
 
 状态：Windows 安装包与源码正式版。GitHub Releases 提供 Setup-x64.exe 与 SHA256SUMS.txt。
 
@@ -81,6 +81,10 @@ package.json 是唯一版本源；正式版本同步 CHANGELOG、README、本文
 由 `pnpm run release:check` 核对。源码主分支更新不等于发布安装包或自动更新用户电脑。
 
 ## 开源与限制
+
+v1.2.0 安装包遗漏 React 运行依赖，在没有开发环境的机器上启动失败；请使用 v1.2.1。
+打包时补齐锁定版本的 React/React DOM/scheduler，并核对解析路径位于安装目录。
+安装验证必须在开发目录之外执行，祖先目录不得含 node_modules，防止掩盖缺包。
 
 仓库：<https://github.com/donlan96/evefrontier-fitter>，MIT 许可证。
 初始公开提交为干净源码快照，不含本机旧历史、用户存档、私人实验文档或诊断。
